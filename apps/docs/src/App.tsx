@@ -43,11 +43,14 @@ import {
 import { type FormEvent, type ReactNode, useState } from "react";
 
 const nav = [
+  ["Install", "install"],
   ["Buttons", "buttons"],
   ["Forms", "forms"],
   ["Display", "display"],
   ["Overlays", "overlays"],
 ] as const;
+
+const installCommand = "npm install @ignitrondev/ui";
 
 export function App() {
   return (
@@ -108,16 +111,19 @@ export function App() {
 
         <div className="mx-auto w-full max-w-[1200px] px-4 py-16 md:px-6 md:py-24">
         <div id="catalog" className="grid gap-px border border-line-strong bg-line-strong">
-          <Specimen id="buttons" index="01" title="Buttons">
+          <Specimen id="install" index="01" title="Install">
+            <Install />
+          </Specimen>
+          <Specimen id="buttons" index="02" title="Buttons">
             <Buttons />
           </Specimen>
-          <Specimen id="forms" index="02" title="Forms">
+          <Specimen id="forms" index="03" title="Forms">
             <Forms />
           </Specimen>
-          <Specimen id="display" index="03" title="Display">
+          <Specimen id="display" index="04" title="Display">
             <Display />
           </Specimen>
-          <Specimen id="overlays" index="04" title="Overlays">
+          <Specimen id="overlays" index="05" title="Overlays">
             <Overlays />
           </Specimen>
         </div>
@@ -133,6 +139,37 @@ export function App() {
         </div>
       </footer>
     </>
+  );
+}
+
+function Install() {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(installCommand);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return (
+    <div className="grid max-w-3xl gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border border-line-strong bg-surface px-4 py-3">
+        <code className="font-mono text-sm text-foreground">{installCommand}</code>
+        <Button size="sm" variant="outline" onClick={() => void copy()}>
+          {copied ? "Copied" : "Copy"}
+        </Button>
+      </div>
+      <p className="text-sm leading-relaxed text-text-2">
+        React 18.3 or 19 is a peer dependency. Import the stylesheet once, then use the components.
+      </p>
+      <pre className="overflow-x-auto border border-line-strong bg-surface p-4 font-mono text-[13px] leading-relaxed text-text-2">
+        <code>{`import "@ignitrondev/ui/styles.css";\nimport { Button } from "@ignitrondev/ui";`}</code>
+      </pre>
+    </div>
   );
 }
 
