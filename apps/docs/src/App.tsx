@@ -26,7 +26,6 @@ import {
   Input,
   Kicker,
   Label,
-  SectionHead,
   Separator,
   Status,
   Switch,
@@ -40,109 +39,265 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@ignitrondev/ui";
-import { type FormEvent, type ReactNode, useState } from "react";
-
-const nav = [
-  ["Install", "install"],
-  ["Buttons", "buttons"],
-  ["Forms", "forms"],
-  ["Display", "display"],
-  ["Overlays", "overlays"],
-] as const;
+import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 
 const installCommand = "npm install @ignitrondev/ui";
 
+type PageId = "getting-started" | "buttons" | "forms" | "display" | "overlays";
+
+type Page = {
+  id: PageId;
+  label: string;
+  title: string;
+  crumbs: readonly string[];
+  lede: string;
+};
+
+const pages: readonly Page[] = [
+  {
+    id: "getting-started",
+    label: "Getting started",
+    title: "Getting started",
+    crumbs: ["Getting started"],
+    lede: "Install the package, import the stylesheet once, then use the components.",
+  },
+  {
+    id: "buttons",
+    label: "Buttons",
+    title: "Buttons",
+    crumbs: ["Components", "Buttons"],
+    lede: "Square actions. The primary fill turns ignition amber on hover.",
+  },
+  {
+    id: "forms",
+    label: "Forms",
+    title: "Forms",
+    crumbs: ["Components", "Forms"],
+    lede: "Fields, checkbox, and switch. Nothing on this page is sent anywhere.",
+  },
+  {
+    id: "display",
+    label: "Display",
+    title: "Display",
+    crumbs: ["Components", "Display"],
+    lede: "Kickers, badges, tags, status, and the hairline card.",
+  },
+  {
+    id: "overlays",
+    label: "Overlays",
+    title: "Overlays",
+    crumbs: ["Components", "Overlays"],
+    lede: "Dialog, menu, and tooltip. Focus stays inside a dialog until it closes.",
+  },
+];
+
+const componentPages = pages.filter((page) => page.id !== "getting-started");
+
+function findPage(id: PageId): Page {
+  const match = pages.find((page) => page.id === id);
+  if (!match) {
+    throw new Error(`Unknown docs page: ${id}`);
+  }
+  return match;
+}
+
+function pageFromHash(): PageId {
+  const id = window.location.hash.replace(/^#\/?/, "");
+  const match = pages.find((page) => page.id === id);
+  return match?.id ?? "getting-started";
+}
+
 export function App() {
+  const [pageId, setPageId] = useState<PageId>("getting-started");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const page = findPage(pageId);
+
+  useEffect(() => {
+    if (!window.location.hash) {
+      history.replaceState(null, "", "#/getting-started");
+    }
+    setPageId(pageFromHash());
+    const onHash = () => {
+      setPageId(pageFromHash());
+      setMenuOpen(false);
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  useEffect(() => {
+    document.title = `${page.title} — Ignitron UI`;
+  }, [page.title]);
+
   return (
-    <>
+    <div className="min-h-screen">
       <a
-        href="#catalog"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:border focus:border-line-strong focus:bg-surface focus:px-3 focus:py-2"
+        href="#content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[70] focus:border focus:border-line-strong focus:bg-surface focus:px-3 focus:py-2"
       >
-        Skip to catalog
+        Skip to content
       </a>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 md:h-16 md:px-6 md:py-0">
-          <a href="#top" className="text-base font-semibold tracking-[-0.03em]">
-            Ignitron<span className="text-text-3">UI</span>
+      <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-3 border-b border-line bg-background/80 px-4 backdrop-blur-md md:px-6">
+        <Button
+          size="sm"
+          variant="outline"
+          className="md:hidden"
+          aria-expanded={menuOpen}
+          aria-controls="docs-sidebar"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          {menuOpen ? "Close" : "Menu"}
+        </Button>
+        <a href="#/getting-started" className="text-base font-semibold tracking-[-0.03em]">
+          Ignitron<span className="text-text-3">UI</span>
+        </a>
+        <Button asChild size="sm" className="ml-auto">
+          <a href="https://github.com/ignitrondev/ignitrondev-ui" target="_blank" rel="noreferrer">
+            GitHub
+            <span className="ign-arrow" aria-hidden="true">
+              ↗
+            </span>
           </a>
-          <nav
-            className="order-3 flex w-full items-center gap-1 sm:order-none sm:ml-auto sm:w-auto"
-            aria-label="Catalog"
-          >
-            {nav.map(([label, id]) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className="px-2.5 py-1.5 text-[13.5px] text-text-2 transition-colors hover:text-foreground"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-          <Button asChild size="sm">
-            <a href="https://github.com/ignitrondev" target="_blank" rel="noreferrer">
-              GitHub
-              <span className="ign-arrow" aria-hidden="true">
-                ↗
-              </span>
-            </a>
-          </Button>
-        </div>
+        </Button>
       </header>
 
-      <main id="top">
-        <section className="border-b border-line px-4 pt-36 pb-20 md:px-6 md:pt-44 md:pb-28">
-          <div className="mx-auto w-full max-w-[1200px]">
-            <SectionHead
-              index="[00]"
-              kicker="Component catalog"
-              title={
-                <>
-                  Parts for the
-                  <br />
-                  <span className="text-text-3">dark engineering system.</span>
-                </>
-              }
-              lede="Square controls, hairline borders, mono indexes, and one ignition-amber accent. The same language as the IgnitronDev site, packaged for React."
-            />
-          </div>
-        </section>
+      {menuOpen ? (
+        <button
+          type="button"
+          className="fixed inset-x-0 top-14 bottom-0 z-30 bg-black/60 md:hidden"
+          aria-label="Close menu"
+          onClick={() => setMenuOpen(false)}
+        />
+      ) : null}
 
-        <div className="mx-auto w-full max-w-[1200px] px-4 py-16 md:px-6 md:py-24">
-        <div id="catalog" className="grid gap-px border border-line-strong bg-line-strong">
-          <Specimen id="install" index="01" title="Install">
-            <Install />
-          </Specimen>
-          <Specimen id="buttons" index="02" title="Buttons">
-            <Buttons />
-          </Specimen>
-          <Specimen id="forms" index="03" title="Forms">
-            <Forms />
-          </Specimen>
-          <Specimen id="display" index="04" title="Display">
-            <Display />
-          </Specimen>
-          <Specimen id="overlays" index="05" title="Overlays">
-            <Overlays />
-          </Specimen>
-        </div>
-        </div>
-      </main>
+      <Sidebar open={menuOpen} pageId={pageId} />
 
-      <footer className="border-t border-line">
-        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-4 py-6 md:px-6">
+      <div className="pt-14 md:pl-60">
+        <main id="content" className="px-4 py-8 md:px-10 md:py-10">
+          <Breadcrumb crumbs={page.crumbs} />
+          <h1
+            tabIndex={-1}
+            className="mt-4 text-3xl font-semibold tracking-[-0.04em] outline-none md:text-4xl"
+          >
+            {page.title}
+          </h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-text-2">{page.lede}</p>
+          <div className="mt-8">{pageContent(page.id)}</div>
+        </main>
+        <footer className="border-t border-line px-4 py-6 md:px-10">
           <p className="font-mono text-[11px] tracking-[0.12em] text-text-3 uppercase">
             Ignitron UI 0.1
           </p>
-          <p className="font-mono text-[11px] tracking-[0.08em] text-text-4">@ignitrondev/ui</p>
-        </div>
-      </footer>
-    </>
+        </footer>
+      </div>
+    </div>
   );
 }
 
-function Install() {
+function Sidebar({ open, pageId }: { open: boolean; pageId: PageId }) {
+  return (
+    <aside
+      id="docs-sidebar"
+      className={`fixed top-14 bottom-0 left-0 z-40 w-60 overflow-y-auto border-r border-line bg-background px-3 py-6 ${
+        open ? "block" : "hidden"
+      } md:block`}
+    >
+      <nav aria-label="Docs">
+        <SidebarLink pageId="getting-started" current={pageId}>
+          Getting started
+        </SidebarLink>
+        <p className="mt-8 mb-2 px-3 font-mono text-[10px] font-medium tracking-[0.14em] text-text-4 uppercase">
+          Components
+        </p>
+        <ul className="grid gap-0.5">
+          {componentPages.map((page) => (
+            <li key={page.id}>
+              <SidebarLink pageId={page.id} current={pageId}>
+                {page.label}
+              </SidebarLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
+}
+
+function SidebarLink({
+  pageId,
+  current,
+  children,
+}: {
+  pageId: PageId;
+  current: PageId;
+  children: ReactNode;
+}) {
+  const active = pageId === current;
+  return (
+    <a
+      href={`#/${pageId}`}
+      aria-current={active ? "page" : undefined}
+      className={`block border-l px-3 py-2 text-sm transition-colors ${
+        active
+          ? "border-brand text-foreground"
+          : "border-transparent text-text-2 hover:text-foreground"
+      }`}
+    >
+      {children}
+    </a>
+  );
+}
+
+function Breadcrumb({ crumbs }: { crumbs: readonly string[] }) {
+  const items = ["Ignitron UI", ...crumbs];
+  return (
+    <nav aria-label="Breadcrumb">
+      <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase">
+        {items.map((item, index) => {
+          const last = index === items.length - 1;
+          return (
+            <li key={`${item}-${index}`} className="flex items-center gap-2">
+              {index > 0 ? (
+                <span className="text-text-4" aria-hidden="true">
+                  /
+                </span>
+              ) : null}
+              {last ? (
+                <span className="text-foreground" aria-current="page">
+                  {item}
+                </span>
+              ) : index === 0 ? (
+                <a href="#/getting-started" className="text-text-3 hover:text-foreground">
+                  {item}
+                </a>
+              ) : (
+                <span className="text-text-3">{item}</span>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
+function pageContent(id: PageId) {
+  switch (id) {
+    case "getting-started":
+      return <GettingStarted />;
+    case "buttons":
+      return <Buttons />;
+    case "forms":
+      return <Forms />;
+    case "display":
+      return <Display />;
+    case "overlays":
+      return <Overlays />;
+  }
+}
+
+function GettingStarted() {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -170,30 +325,6 @@ function Install() {
         <code>{`import "@ignitrondev/ui/styles.css";\nimport { Button } from "@ignitrondev/ui";`}</code>
       </pre>
     </div>
-  );
-}
-
-function Specimen({
-  id,
-  index,
-  title,
-  children,
-}: {
-  id: string;
-  index: string;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section id={id} className="bg-background px-5 py-7 md:px-7" aria-labelledby={`${id}-title`}>
-      <h2
-        id={`${id}-title`}
-        className="mb-6 font-mono text-[11px] font-medium tracking-[0.12em] text-text-3 uppercase"
-      >
-        <span className="text-brand">{index}</span> {title}
-      </h2>
-      {children}
-    </section>
   );
 }
 
@@ -324,7 +455,7 @@ function Forms() {
 
 function Display() {
   return (
-    <div className="grid gap-6">
+    <div className="grid max-w-3xl gap-6">
       <div className="flex flex-wrap items-center gap-2">
         <Kicker index="[03]">Engineering practice</Kicker>
       </div>
@@ -370,10 +501,10 @@ function Display() {
         </CardContent>
         <CardFooter>
           <Button asChild size="sm" variant="outline">
-            <a href="#buttons">
-              Back to buttons
+            <a href="#/buttons">
+              Buttons
               <span className="ign-arrow" aria-hidden="true">
-                ↑
+                →
               </span>
             </a>
           </Button>

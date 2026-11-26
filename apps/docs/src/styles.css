@@ -8,7 +8,6 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 128px;
   }
 
   body {
@@ -25,26 +24,9 @@
   }
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(var(--line), var(--line)) calc(50% - 600px) 0 / 1px 100% no-repeat,
-    linear-gradient(var(--line), var(--line)) calc(50% + 600px) 0 / 1px 100% no-repeat;
-}
-
 #root {
   position: relative;
   z-index: 1;
-}
-
-@media (max-width: 1260px) {
-  body::before {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
