@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "../../../packages/ui/src/theme.css";
+@source ".";
+@source "../../../packages/ui/src";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 128px;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--brand);
+    color: #111;
+  }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--line), var(--line)) calc(50% - 600px) 0 / 1px 100% no-repeat,
+    linear-gradient(var(--line), var(--line)) calc(50% + 600px) 0 / 1px 100% no-repeat;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1260px) {
+  body::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

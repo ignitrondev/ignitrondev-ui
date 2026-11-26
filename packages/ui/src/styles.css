@@ -1,0 +1,7 @@
+/* Consumer entry. Utilities for the component classes, no preflight,
+   so this can sit beside an existing stylesheet. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./theme.css";
+@source "./**/*.{ts,tsx}";
