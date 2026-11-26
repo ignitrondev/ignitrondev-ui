@@ -4,8 +4,10 @@ React component package for the IgnitronDev site. The visual system is the dark 
 
 ```
 packages/ui     @ignitrondev/ui
-apps/docs       catalog at http://127.0.0.1:4178
+apps/docs       catalog
 ```
+
+The catalog is published at https://ignitrondev.github.io/ignitrondev-ui/. `bun run dev` still serves it locally at http://127.0.0.1:4178.
 
 ```bash
 bun install
