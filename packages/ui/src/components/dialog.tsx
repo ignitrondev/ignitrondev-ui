@@ -1,6 +1,7 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 import {
   forwardRef,
   type ComponentProps,
@@ -8,7 +9,6 @@ import {
   type ElementRef,
 } from "react";
 import { cn } from "../lib/utils.js";
-import { IconX } from "./icons.js";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -19,22 +19,27 @@ export const DialogContent = forwardRef<
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(function DialogContent({ className, children, ...props }, ref) {
   return (
-    <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/70 motion-safe:animate-fade" />
+    <DialogPrimitive.Portal data-slot="dialog-portal">
+      <DialogPrimitive.Overlay
+        data-slot="dialog-overlay"
+        className="fixed inset-0 z-50 bg-overlay transition-opacity duration-150"
+      />
       <DialogPrimitive.Content
         ref={ref}
+        data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 w-[min(calc(100%-2rem),28rem)] -translate-x-1/2 -translate-y-1/2 border border-line-strong bg-raised p-6 text-foreground outline-none motion-safe:animate-fade",
+          "fixed top-1/2 left-1/2 z-50 w-[min(calc(100%-2rem),28rem)] -translate-x-1/2 -translate-y-1/2 border border-line-strong bg-raised p-6 text-foreground outline-none transition-opacity duration-150",
           className,
         )}
         {...props}
       >
         {children}
         <DialogPrimitive.Close
+          data-slot="dialog-close"
           aria-label="Close"
-          className="absolute top-4 right-4 inline-flex size-[34px] cursor-pointer items-center justify-center border border-line-strong text-text-2 transition-colors outline-none hover:border-line-bright hover:bg-white/4 hover:text-foreground focus-visible:outline focus-visible:outline-offset-[3px] focus-visible:outline-brand"
+          className="absolute top-4 right-4 inline-flex size-[34px] cursor-pointer items-center justify-center border border-line-strong text-text-2 transition-colors outline-none hover:border-line-bright hover:bg-hover hover:text-foreground focus-visible:outline focus-visible:outline-offset-[3px] focus-visible:outline-ring"
         >
-          <IconX className="size-3.5" />
+          <X className="size-3.5" strokeWidth={1.75} />
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
@@ -42,7 +47,7 @@ export const DialogContent = forwardRef<
 });
 
 export function DialogHeader({ className, ...props }: ComponentProps<"div">) {
-  return <div className={cn("grid gap-2 pr-10", className)} {...props} />;
+  return <div data-slot="dialog-header" className={cn("grid gap-2 pr-10", className)} {...props} />;
 }
 
 export const DialogTitle = forwardRef<
@@ -52,6 +57,7 @@ export const DialogTitle = forwardRef<
   return (
     <DialogPrimitive.Title
       ref={ref}
+      data-slot="dialog-title"
       className={cn("text-xl leading-tight font-semibold tracking-[-0.03em]", className)}
       {...props}
     />
@@ -65,12 +71,19 @@ export const DialogDescription = forwardRef<
   return (
     <DialogPrimitive.Description
       ref={ref}
-      className={cn("text-sm leading-relaxed text-text-2", className)}
+      data-slot="dialog-description"
+      className={cn("text-sm leading-relaxed text-muted-foreground", className)}
       {...props}
     />
   );
 });
 
 export function DialogFooter({ className, ...props }: ComponentProps<"div">) {
-  return <div className={cn("mt-6 flex flex-wrap justify-end gap-2.5", className)} {...props} />;
+  return (
+    <div
+      data-slot="dialog-footer"
+      className={cn("mt-6 flex flex-wrap justify-end gap-2.5", className)}
+      {...props}
+    />
+  );
 }

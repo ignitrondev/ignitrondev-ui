@@ -2,14 +2,34 @@
 
 React components for the IgnitronDev dark engineering system: near-black canvas, hairline borders, mono indexes, square controls, and one ignition-amber accent (`#ffb224`).
 
-The primitives follow the shadcn shape (Radix, `class-variance-authority`, Tailwind tokens, `cn()`). The skin is the landing page at ignitrondev.space, not the default shadcn theme.
+Built on **shadcn/ui v4** (`components.json`, Radix primitives, `lucide-react`, `class-variance-authority`, Tailwind CSS v4 tokens, `data-slot`), customized with the IgnitronDev skin from ignitrondev.space.
 
-Dark only. Radius is `0`.
+Standard shadcn theme convention: `:root` is light, `.dark` is dark (`@custom-variant dark`), with `ThemeProvider` and `useTheme` included. Radius is `0`.
 
 ## Install
 
+### Option 1 — npm package
+
 ```bash
 bun add @ignitrondev/ui
+```
+
+### Option 2 — shadcn CLI Registry
+
+Register the `@ignitrondev` namespace in your `components.json`:
+
+```json
+{
+  "registries": {
+    "@ignitrondev": "https://ignitrondev.github.io/ignitrondev-ui/r/{name}.json"
+  }
+}
+```
+
+Then install components directly into your `components/ui/` folder:
+
+```bash
+npx shadcn@latest add @ignitrondev/theme @ignitrondev/button @ignitrondev/card
 ```
 
 Peer dependencies: `react` and `react-dom` 18.3 or 19.
@@ -19,6 +39,15 @@ Load Geist if you want the same type as the site:
 ```bash
 bun add @fontsource-variable/geist @fontsource-variable/geist-mono
 ```
+
+With **Tailwind CSS v4** (recommended — zero duplicate CSS):
+
+```css
+@import "tailwindcss";
+@import "@ignitrondev/ui/theme.css";
+```
+
+Or **without Tailwind** (standalone precompiled bundle):
 
 ```ts
 import "@fontsource-variable/geist";
@@ -60,7 +89,8 @@ An element with the class `ign-arrow`, and any inline SVG, shifts 3px right on h
 
 | Export | Role |
 | --- | --- |
-| `Button` | `primary`, `outline`, `ghost`, `secondary`. Sizes `sm`, `default`, `lg`, `icon`. |
+| `Button` | `default` (`primary`), `destructive`, `outline`, `secondary`, `ghost`, `link`. Sizes `sm`, `default`, `lg`, `icon`. |
+| `ThemeProvider`, `useTheme` | Standard shadcn light/dark/system theme provider (`defaultTheme="dark"`). |
 | `Input`, `Textarea`, `Label`, `Field`, `Checkbox`, `Switch` | Square fields. `aria-invalid` turns the border red. |
 | `Kicker`, `SectionHead`, `Badge`, `Tag`, `Status` | Mono labels, availability chips, live dot. |
 | `Card` and its header, title, description, content, footer | Hairline panel. `corners` adds the registration ticks. |
@@ -74,16 +104,26 @@ An element with the class `ign-arrow`, and any inline SVG, shifts 3px right on h
 
 ## Tokens
 
-| Token | Value | Use |
-| --- | --- | --- |
-| `--background` | `#08080a` | Page |
-| `--raised` | `#0d0d10` | Dialogs |
-| `--surface` | `#111114` | Cards, fields |
-| `--surface-2` | `#17171b` | Secondary buttons, menus |
-| `--foreground` | `#ededef` | Primary text, primary button fill |
-| `--brand` / `--accent` | `#ffb224` | Amber. Primary buttons turn this color on hover. |
-| `--ok` | `#4ade80` | Live status |
-| `--line-strong` | white at 14% | Borders |
+| Token | Dark | Light | Use |
+| --- | --- | --- | --- |
+| `--background` | `#08080a` | `#fafafa` | Page |
+| `--raised` | `#0d0d10` | `#ffffff` | Dialogs |
+| `--surface` | `#111114` | `#ffffff` | Cards, fields |
+| `--surface-2` | `#17171b` | `#f4f4f5` | Secondary buttons, menus |
+| `--foreground` | `#ededef` | `#09090b` | Primary text, primary button fill |
+| `--brand` / `--accent` | `#ffb224` | `#b45309` | Amber. Primary buttons turn this color on hover. |
+| `--ok` | `#4ade80` | `#16a34a` | Live status |
+| `--line-strong` | white at 14% | ink at 16% | Borders |
+
+Wrap your app in `ThemeProvider` (defaults to `dark`) and switch themes with `useTheme`:
+
+```tsx
+import { ThemeProvider, useTheme } from "@ignitrondev/ui";
+
+export function Root({ children }: { children: React.ReactNode }) {
+  return <ThemeProvider defaultTheme="dark">{children}</ThemeProvider>;
+}
+```
 
 Tailwind classes: `bg-surface`, `text-text-2`, `border-line-strong`, `text-brand`, `bg-ok`.
 

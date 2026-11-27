@@ -8,8 +8,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, ComponentProps<"textarea
     return (
       <textarea
         ref={ref}
+        data-slot="textarea"
         className={cn(
-          "min-h-32 w-full resize-y border border-input bg-surface px-3 py-3 text-sm leading-relaxed text-foreground transition-colors outline-none placeholder:text-text-4 focus-visible:border-brand disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive",
+          "min-h-32 w-full resize-y border border-input bg-surface px-3 py-3 text-sm leading-relaxed text-foreground transition-colors outline-none placeholder:text-text-4 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive",
           className,
         )}
         {...props}

@@ -11,7 +11,11 @@ export const Label = forwardRef<
   return (
     <LabelPrimitive.Root
       ref={ref}
-      className={cn("text-[13px] font-medium text-text-2", className)}
+      data-slot="label"
+      className={cn(
+        "text-[13px] font-medium text-text-2 select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className,
+      )}
       {...props}
     />
   );

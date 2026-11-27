@@ -11,10 +11,11 @@ export const Separator = forwardRef<
   return (
     <SeparatorPrimitive.Root
       ref={ref}
+      data-slot="separator"
       orientation={orientation}
       decorative={decorative}
       className={cn(
-        "shrink-0 bg-line-strong",
+        "shrink-0 bg-border",
         orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
         className,
       )}

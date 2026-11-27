@@ -13,6 +13,7 @@ export const TabsList = forwardRef<
   return (
     <TabsPrimitive.List
       ref={ref}
+      data-slot="tabs-list"
       className={cn("inline-flex border border-line-strong", className)}
       {...props}
     />
@@ -26,8 +27,9 @@ export const TabsTrigger = forwardRef<
   return (
     <TabsPrimitive.Trigger
       ref={ref}
+      data-slot="tabs-trigger"
       className={cn(
-        "inline-flex h-9 cursor-pointer items-center px-3 text-[13px] text-text-2 transition-colors outline-none focus-visible:outline focus-visible:outline-offset-[-1px] focus-visible:outline-brand data-[state=active]:bg-foreground data-[state=active]:text-background",
+        "inline-flex h-9 cursor-pointer items-center px-3 text-[13px] text-text-2 transition-colors outline-none focus-visible:outline focus-visible:outline-offset-[-1px] focus-visible:outline-ring data-[state=active]:bg-foreground data-[state=active]:text-background",
         className,
       )}
       {...props}
@@ -42,6 +44,7 @@ export const TabsContent = forwardRef<
   return (
     <TabsPrimitive.Content
       ref={ref}
+      data-slot="tabs-content"
       className={cn("mt-4 outline-none", className)}
       {...props}
     />

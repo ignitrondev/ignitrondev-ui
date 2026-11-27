@@ -16,9 +16,10 @@ export const DropdownMenuContent = forwardRef<
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         ref={ref}
+        data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         className={cn(
-          "z-50 min-w-48 border border-line-strong bg-popover p-1 text-popover-foreground motion-safe:animate-fade",
+          "z-50 min-w-48 border border-line-strong bg-popover p-1 text-popover-foreground transition-opacity duration-150",
           className,
         )}
         {...props}
@@ -34,6 +35,7 @@ export const DropdownMenuLabel = forwardRef<
   return (
     <DropdownMenuPrimitive.Label
       ref={ref}
+      data-slot="dropdown-menu-label"
       className={cn(
         "px-3 py-2 font-mono text-[10px] font-medium tracking-[0.12em] text-text-3 uppercase",
         className,
@@ -50,8 +52,9 @@ export const DropdownMenuItem = forwardRef<
   return (
     <DropdownMenuPrimitive.Item
       ref={ref}
+      data-slot="dropdown-menu-item"
       className={cn(
-        "flex cursor-pointer items-center px-3 py-2 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-white/6",
+        "flex cursor-pointer items-center px-3 py-2 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-hover-strong",
         className,
       )}
       {...props}
@@ -66,6 +69,7 @@ export const DropdownMenuSeparator = forwardRef<
   return (
     <DropdownMenuPrimitive.Separator
       ref={ref}
+      data-slot="dropdown-menu-separator"
       className={cn("my-1 h-px bg-line", className)}
       {...props}
     />

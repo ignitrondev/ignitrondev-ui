@@ -41,5 +41,12 @@ export { Switch } from "./components/switch.js";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs.js";
 export { Tag } from "./components/tag.js";
 export { Textarea } from "./components/textarea.js";
+export {
+  ThemeProvider,
+  useTheme,
+  type ResolvedTheme,
+  type Theme,
+  type ThemeProviderProps,
+} from "./components/theme-provider.js";
 export { Tooltip, TooltipContent, TooltipTrigger } from "./components/tooltip.js";
 export { cn } from "./lib/utils.js";

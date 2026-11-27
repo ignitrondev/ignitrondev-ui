@@ -11,8 +11,9 @@ export const Input = forwardRef<HTMLInputElement, ComponentProps<"input">>(funct
     <input
       ref={ref}
       type={type}
+      data-slot="input"
       className={cn(
-        "h-11 w-full border border-input bg-surface px-3 text-sm text-foreground transition-colors outline-none placeholder:text-text-4 focus-visible:border-brand disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive",
+        "h-11 w-full border border-input bg-surface px-3 text-sm text-foreground transition-colors outline-none placeholder:text-text-4 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive",
         className,
       )}
       {...props}

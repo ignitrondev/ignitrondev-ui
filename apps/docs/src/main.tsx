@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@ignitrondev/ui";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App.js";
@@ -10,6 +11,8 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <ThemeProvider defaultTheme="dark" storageKey="ignitron-theme">
+      <App />
+    </ThemeProvider>
   </StrictMode>,
 );

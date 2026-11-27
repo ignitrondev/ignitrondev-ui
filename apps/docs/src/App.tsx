@@ -38,6 +38,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  useTheme,
 } from "@ignitrondev/ui";
 import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 
@@ -152,20 +153,23 @@ export function App() {
         <a href="#/getting-started" className="text-base font-semibold tracking-[-0.03em]">
           Ignitron<span className="text-text-3">UI</span>
         </a>
-        <Button asChild size="sm" className="ml-auto">
-          <a href="https://github.com/ignitrondev/ignitrondev-ui" target="_blank" rel="noreferrer">
-            GitHub
-            <span className="ign-arrow" aria-hidden="true">
-              ↗
-            </span>
-          </a>
-        </Button>
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <Button asChild size="sm">
+            <a href="https://github.com/ignitrondev/ignitrondev-ui" target="_blank" rel="noreferrer">
+              GitHub
+              <span className="ign-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          </Button>
+        </div>
       </header>
 
       {menuOpen ? (
         <button
           type="button"
-          className="fixed inset-x-0 top-14 bottom-0 z-30 bg-black/60 md:hidden"
+          className="fixed inset-x-0 top-14 bottom-0 z-30 bg-overlay md:hidden"
           aria-label="Close menu"
           onClick={() => setMenuOpen(false)}
         />
@@ -187,11 +191,28 @@ export function App() {
         </main>
         <footer className="border-t border-line px-4 py-6 md:px-10">
           <p className="font-mono text-[11px] tracking-[0.12em] text-text-3 uppercase">
-            Ignitron UI 0.1
+            Ignitron UI 1.1
           </p>
         </footer>
       </div>
     </div>
+  );
+}
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const isLight = resolvedTheme === "light";
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      onClick={() => setTheme(isLight ? "dark" : "light")}
+      aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
+      aria-pressed={isLight}
+      className="font-mono text-[11px] tracking-[0.08em] uppercase"
+    >
+      {isLight ? "Dark" : "Light"}
+    </Button>
   );
 }
 
@@ -319,10 +340,31 @@ function GettingStarted() {
         </Button>
       </div>
       <p className="text-sm leading-relaxed text-text-2">
-        React 18.3 or 19 is a peer dependency. Import the stylesheet once, then use the components.
+        Using Tailwind CSS v4? Import the theme in your{" "}
+        <code className="font-mono text-foreground">globals.css</code> (zero duplicate CSS):
+      </p>
+      <pre className="overflow-x-auto border border-line-strong bg-surface p-4 font-mono text-[13px] leading-relaxed text-text-2">
+        <code>{`@import "tailwindcss";\n@import "@ignitrondev/ui/theme.css";`}</code>
+      </pre>
+      <p className="text-sm leading-relaxed text-text-2">
+        Or without Tailwind, import the precompiled stylesheet once:
       </p>
       <pre className="overflow-x-auto border border-line-strong bg-surface p-4 font-mono text-[13px] leading-relaxed text-text-2">
         <code>{`import "@ignitrondev/ui/styles.css";\nimport { Button } from "@ignitrondev/ui";`}</code>
+      </pre>
+      <p className="text-sm leading-relaxed text-text-2">
+        Or add the <code className="font-mono text-foreground">@ignitrondev</code> registry in{" "}
+        <code className="font-mono text-foreground">components.json</code> and install directly into{" "}
+        <code className="font-mono text-foreground">components/ui/</code>:
+      </p>
+      <pre className="overflow-x-auto border border-line-strong bg-surface p-4 font-mono text-[13px] leading-relaxed text-text-2">
+        <code>{`// components.json\n"registries": {\n  "@ignitrondev": "https://ignitrondev.github.io/ignitrondev-ui/r/{name}.json"\n}\n\n# install\nnpx shadcn@latest add @ignitrondev/theme @ignitrondev/button`}</code>
+      </pre>
+      <p className="text-sm leading-relaxed text-text-2">
+        Built on shadcn/ui + Tailwind CSS v4 with light (<code className="font-mono text-foreground">:root</code>) and dark (<code className="font-mono text-foreground">.dark</code>) tokens. Wrap your app in <code className="font-mono text-foreground">ThemeProvider</code> and toggle with <code className="font-mono text-foreground">useTheme</code>.
+      </p>
+      <pre className="overflow-x-auto border border-line-strong bg-surface p-4 font-mono text-[13px] leading-relaxed text-text-2">
+        <code>{`import { ThemeProvider } from "@ignitrondev/ui";\n\n<ThemeProvider defaultTheme="dark">\n  <App />\n</ThemeProvider>`}</code>
       </pre>
     </div>
   );

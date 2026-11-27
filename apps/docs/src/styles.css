@@ -3,7 +3,6 @@
 @import "@fontsource-variable/geist-mono";
 @import "../../../packages/ui/src/theme.css";
 @source ".";
-@source "../../../packages/ui/src";
 
 @layer base {
   html {
@@ -20,7 +19,7 @@
 
   ::selection {
     background: var(--brand);
-    color: #111;
+    color: var(--brand-foreground);
   }
 }
 

@@ -7,8 +7,20 @@
     <title>Ignitron UI</title>
     <meta
       name="description"
-      content="Component catalog for the IgnitronDev dark engineering system."
+      content="Component catalog for the IgnitronDev engineering system."
     />
+    <script>
+      try {
+        var stored = localStorage.getItem("ignitron-theme");
+        var isDark =
+          stored === "dark" ||
+          stored === null ||
+          (stored === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", isDark);
+        document.documentElement.classList.toggle("light", !isDark);
+        document.documentElement.dataset.theme = isDark ? "dark" : "light";
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

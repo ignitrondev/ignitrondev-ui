@@ -8,9 +8,9 @@ export type StatusTone = "ok" | "brand" | "muted";
 function dotClass(tone: StatusTone): string {
   switch (tone) {
     case "ok":
-      return "bg-ok shadow-[0_0_8px_rgba(74,222,128,0.7)]";
+      return "bg-ok shadow-[0_0_8px_var(--ok-glow)]";
     case "brand":
-      return "bg-brand shadow-[0_0_8px_rgba(255,178,36,0.55)]";
+      return "bg-brand shadow-[0_0_8px_var(--brand-glow)]";
     case "muted":
       return "bg-text-4";
   }
@@ -19,11 +19,11 @@ function dotClass(tone: StatusTone): string {
 function ringClass(tone: StatusTone): string {
   switch (tone) {
     case "ok":
-      return "border-ok";
+      return "bg-ok/60";
     case "brand":
-      return "border-brand";
+      return "bg-brand/60";
     case "muted":
-      return "border-text-4";
+      return "bg-text-4/60";
   }
 }
 
@@ -40,21 +40,22 @@ export function Status({
 }) {
   return (
     <span
+      data-slot="status"
       className={cn(
         "inline-flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.12em] text-text-2 uppercase",
         className,
       )}
     >
       <span className="relative inline-block size-1.5 shrink-0" aria-hidden="true">
-        <span className={cn("absolute inset-0 rounded-full", dotClass(tone))} />
         {pulse ? (
           <span
             className={cn(
-              "absolute -inset-[3px] rounded-full border opacity-0 motion-safe:animate-ripple",
+              "absolute inset-0 rounded-full motion-safe:animate-ping",
               ringClass(tone),
             )}
           />
         ) : null}
+        <span className={cn("relative block size-1.5 rounded-full", dotClass(tone))} />
       </span>
       {children}
     </span>

@@ -13,3 +13,17 @@ test("icon buttons do not slide their glyph", () => {
   const classes = buttonVariants({ size: "icon" });
   assert.doesNotMatch(classes, /hover:\[&_svg\]:translate-x-/);
 });
+
+test("outline and ghost buttons use theme-aware hover tokens", () => {
+  for (const variant of ["outline", "ghost"] as const) {
+    const classes = buttonVariants({ variant });
+    assert.match(classes, /hover:bg-hover/);
+    assert.doesNotMatch(classes, /bg-white\//);
+  }
+});
+
+test("shadcn default and destructive variants work", () => {
+  assert.match(buttonVariants({ variant: "default" }), /bg-primary/);
+  assert.match(buttonVariants({ variant: "destructive" }), /bg-destructive/);
+  assert.match(buttonVariants({ variant: "link" }), /hover:underline/);
+});
